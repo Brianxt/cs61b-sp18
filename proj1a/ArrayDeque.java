@@ -133,7 +133,7 @@ public class ArrayDeque<T> {
         }
     }
 
-    public static void main(String[] args) {
+    /**public static void main(String[] args) {
         ArrayDeque<Integer> A = new ArrayDeque<>();
         System.out.println(A.isEmpty());
         A.addFirst(1);
@@ -155,6 +155,6 @@ public class ArrayDeque<T> {
         //A.removeLast();
         //System.out.println(" ");
         //A.printDeque();
-    }
+    }*/
 
 }
