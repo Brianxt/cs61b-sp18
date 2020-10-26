@@ -73,7 +73,7 @@ public class LinkedListDeque<T> {
             size = size - 1;
             return x;
         } else {
-            return x;
+            return null;
         }
     }
 
@@ -86,7 +86,7 @@ public class LinkedListDeque<T> {
             size = size - 1;
             return x;
         } else {
-            return x;
+            return null;
         }
     }
 
