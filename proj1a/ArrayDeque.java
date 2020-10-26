@@ -15,15 +15,15 @@ public class ArrayDeque<T> {
         double dcapacity = sz * factor;
         int capacity = (int) dcapacity;
         T[] a = (T[]) new Object[capacity];
-        int currentLast = Math.floorMod(items.length, (nextLast - 1));
-        int currentFirst = Math.floorMod(items.length, (nextFirst + 1));
+        int currentLast = Math.floorMod((nextLast - 1), items.length);
+        int currentFirst = Math.floorMod((nextFirst + 1), items.length);
         if (currentLast < currentFirst) {
             System.arraycopy(items, 0, a, 0, nextLast);
             if (factor > 1) {
                 System.arraycopy(items, nextFirst + 1, a,
-                        a.length * 1 / 2 + nextFirst + 1, sz - nextFirst - 1);
+                        a.length / 2 + nextFirst + 1, sz - nextFirst - 1);
                 items = a;
-                nextFirst = a.length * 1 / 2 + nextFirst;
+                nextFirst = a.length / 2 + nextFirst;
             } else {
                 System.arraycopy(items, nextFirst + 1, a,
                         nextFirst - a.length + 1, sz - nextFirst - 1);
@@ -44,7 +44,7 @@ public class ArrayDeque<T> {
         }
         items[nextFirst] = x;
         size += 1;
-        nextFirst = Math.floorMod(items.length, (nextFirst - 1));
+        nextFirst = Math.floorMod((nextFirst - 1), items.length);
     }
 
     public void addLast(T x) {
@@ -53,7 +53,7 @@ public class ArrayDeque<T> {
         }
         items[nextLast] = x;
         size += 1;
-        nextLast = Math.floorMod(items.length, (nextLast + 1));
+        nextLast = Math.floorMod((nextLast + 1), items.length);
     }
 
     public boolean isEmpty() {
@@ -75,10 +75,11 @@ public class ArrayDeque<T> {
     public T removeFirst() {
         if (size > 0) {
             int t = nextFirst + 1;
-            T x = items[Math.floorMod(items.length, t)];
-            items[t] = null;
+            int p = Math.floorMod(t, items.length);
+            T x = items[p];
+            items[p] = null;
             size = size - 1;
-            nextFirst = Math.floorMod(items.length, t);
+            nextFirst = Math.floorMod(t, items.length);
             if (items.length > 8) {
                 double dsize = size;
                 double l = items.length;
@@ -113,10 +114,11 @@ public class ArrayDeque<T> {
     public T removeLast() {
         if (size > 0) {
             int t = nextLast - 1;
-            T x = items[Math.floorMod(items.length, t)];
-            items[t] = null;
+            int p = Math.floorMod(t, items.length);
+            T x = items[p];
+            items[p] = null;
             size = size - 1;
-            nextLast = Math.floorMod(items.length, t);
+            nextLast = Math.floorMod(t, items.length);
             if (items.length > 8) {
                 double dsize = size;
                 double l = items.length;
@@ -131,25 +133,28 @@ public class ArrayDeque<T> {
         }
     }
 
-    /**public static void main(String[] args) {
+    public static void main(String[] args) {
         ArrayDeque<Integer> A = new ArrayDeque<>();
         System.out.println(A.isEmpty());
         A.addFirst(1);
         A.addFirst(2);
         A.addLast(3);
-        A.addFirst(4);
-        A.addFirst(5);
-        A.addFirst(6);
-        A.addLast(7);
-        A.addFirst(8);
-        A.addLast(9);
+        //A.addFirst(4);
+        //A.addFirst(5);
+        //A.addFirst(6);
+        //A.addLast(7);
+        //A.addFirst(8);
+        //A.addLast(9);
+        A.removeLast();
+        //int test = Math.floorMod(-1, 8);
+        A.removeLast();
         System.out.println(A.size());
         System.out.println(A.get(1));
         A.printDeque();
-        A.removeFirst();
-        A.removeLast();
-        System.out.println(" ");
-        A.printDeque();
-    }*/
+        //A.removeFirst();
+        //A.removeLast();
+        //System.out.println(" ");
+        //A.printDeque();
+    }
 
 }
