@@ -15,19 +15,26 @@ public class ArrayDeque<T> {
         double dcapacity = sz * factor;
         int capacity = (int) dcapacity;
         T[] a = (T[]) new Object[capacity];
-        System.arraycopy(items, 0, a, 0, nextLast);
-        if (factor > 1) {
-            System.arraycopy(items, nextFirst + 1, a,
-                    a.length * 1 / 2 + nextFirst + 1, sz - nextFirst - 1);
+        int currentLast = (nextLast - 1) % items.length;
+        int currentFirst = (nextFirst + 1) % items.length;
+        if (currentLast < currentFirst) {
+            System.arraycopy(items, 0, a, 0, nextLast);
+            if (factor > 1) {
+                System.arraycopy(items, nextFirst + 1, a,
+                        a.length * 1 / 2 + nextFirst + 1, sz - nextFirst - 1);
+                items = a;
+                nextFirst = a.length * 1 / 2 + nextFirst;
+            } else {
+                System.arraycopy(items, nextFirst + 1, a,
+                        nextFirst - a.length + 1, sz - nextFirst - 1);
+                items = a;
+                nextFirst = nextFirst - a.length;
+            }
         } else {
-            System.arraycopy(items, nextFirst + 1, a,
-                    nextFirst - a.length + 1, sz - nextFirst - 1);
-        }
-        items = a;
-        if (factor > 1) {
-            nextFirst = a.length * 1 / 2 + nextFirst;
-        } else {
-            nextFirst = nextFirst - a.length;
+            System.arraycopy(items, currentFirst, a, 0, currentLast - currentFirst + 1);
+            items = a;
+            nextLast = currentLast - currentFirst + 1;
+            nextFirst = capacity - 1;
         }
     }
 
@@ -67,33 +74,35 @@ public class ArrayDeque<T> {
 
     public T removeFirst() {
         if (size > 0) {
+            int t = nextFirst + 1;
+            T x = items[t % items.length];
+            items[t] = null;
             size = size - 1;
+            nextFirst = t % items.length;
+            if (items.length > 8) {
+                double dsize = size;
+                double l = items.length;
+                if (dsize / l <= 0.25) {
+                    int k = items.length;
+                    resize(k, 0.5);
+                }
+            }
+            return x;
         } else {
             return null;
         }
-        T x = items[nextFirst + 1];
-        items[nextFirst + 1] = null;
-        nextFirst = nextFirst + 1;
-        if (items.length > 8) {
-            double dsize = size;
-            double l = items.length;
-            if (dsize / l <= 0.25) {
-                int k = items.length;
-                resize(k, 0.5);
-            }
-        }
-        return  x;
     }
 
     public T get(int i) {
-        if (i < items.length - nextFirst - 1) {
-            return items[nextFirst + 1 + i];
-        }
-        if ((items.length - nextFirst - 1 <= i) && (i < nextLast + items.length - nextFirst - 1)) {
-            return items[i - (items.length - nextFirst - 1)];
-        } else {
+        if (i >= size) {
             return null;
         }
+
+        int iFromFront = nextFirst + 1 + i;
+        if (iFromFront >= capacity) {
+            iFromFront -= capacity;
+        }
+        return items[iFromFront];
     }
 
     public int size() {
@@ -103,22 +112,23 @@ public class ArrayDeque<T> {
 
     public T removeLast() {
         if (size > 0) {
+            int t = nextLast - 1;
+            T x = items[t % items.length];
+            items[t] = null;
             size = size - 1;
+            nextLast = t % items.length;
+            if (items.length > 8) {
+                double dsize = size;
+                double l = items.length;
+                if (dsize / l <= 0.25) {
+                    int k = items.length;
+                    resize(k, 0.5);
+                }
+            }
+            return x;
         } else {
             return null;
         }
-        T x = items[nextLast - 1];
-        items[nextLast - 1] = null;
-        nextLast = nextLast - 1;
-        if (items.length > 8) {
-            double dsize = size;
-            double l = items.length;
-            if (dsize / l <= 0.25) {
-                int k = items.length;
-                resize(k, 0.5);
-            }
-        }
-        return x;
     }
 
     /**public static void main(String[] args) {
