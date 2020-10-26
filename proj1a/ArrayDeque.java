@@ -11,20 +11,22 @@ public class ArrayDeque<T> {
         nextLast = 0;
     }
 
-    private void resize(int size, double factor) {
-        double dcapacity = size * factor;
+    private void resize(int sz, double factor) {
+        double dcapacity = sz * factor;
         int capacity = (int) dcapacity;
         T[] a = (T[]) new Object[capacity];
-        System.arraycopy(items,0,a,0,nextLast);
+        System.arraycopy(items, 0, a, 0, nextLast);
         if (factor > 1) {
-            System.arraycopy(items, nextFirst + 1, a, a.length * 1/2 + nextFirst + 1, size - nextFirst - 1 );
-        }else {
-            System.arraycopy(items, nextFirst + 1, a, nextFirst - a.length + 1, size - nextFirst - 1);
+            System.arraycopy(items, nextFirst + 1, a,
+                    a.length * 1 / 2 + nextFirst + 1, sz - nextFirst - 1);
+        } else {
+            System.arraycopy(items, nextFirst + 1, a,
+                    nextFirst - a.length + 1, sz - nextFirst - 1);
         }
         items = a;
         if (factor > 1) {
-            nextFirst = a.length * 1/2 + nextFirst;
-        }else {
+            nextFirst = a.length * 1 / 2 + nextFirst;
+        } else {
             nextFirst = nextFirst - a.length;
         }
     }
@@ -66,7 +68,11 @@ public class ArrayDeque<T> {
     public T removeFirst() {
         T x = items[nextFirst + 1];
         items[nextFirst + 1] = null;
-        size = size - 1;
+        if (size > 0) {
+            size = size - 1;
+        } else {
+            return x;
+        }
         nextFirst = nextFirst + 1;
         if (items.length > 8) {
             double dsize = size;
@@ -85,7 +91,7 @@ public class ArrayDeque<T> {
         }
         if ((items.length - nextFirst - 1 <= i) && (i < nextLast + items.length - nextFirst - 1)) {
             return items[i - (items.length - nextFirst - 1)];
-        }else {
+        } else {
             return null;
         }
     }
@@ -98,7 +104,11 @@ public class ArrayDeque<T> {
     public T removeLast() {
         T x = items[nextLast - 1];
         items[nextLast - 1] = null;
-        size = size - 1;
+        if (size > 0) {
+            size = size - 1;
+        } else {
+            return x;
+        }
         nextLast = nextLast - 1;
         if (items.length > 8) {
             double dsize = size;
@@ -131,4 +141,5 @@ public class ArrayDeque<T> {
         System.out.println(" ");
         A.printDeque();
     }*/
+
 }
