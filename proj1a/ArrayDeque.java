@@ -99,8 +99,8 @@ public class ArrayDeque<T> {
         }
 
         int iFromFront = nextFirst + 1 + i;
-        if (iFromFront >= capacity) {
-            iFromFront -= capacity;
+        if (iFromFront >= items.length) {
+            iFromFront -= items.length;
         }
         return items[iFromFront];
     }
