@@ -17,6 +17,7 @@ public class PercolationStats {
         this.N = N;
         this.T = T;
         num = new int[T];
+        p = new Percolation[T];
         for (int i = T; i > 0; i--) {
             p[T - i] = pf.make(N);
             while (!p[T - i].percolates()) {

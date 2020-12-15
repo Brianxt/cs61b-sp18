@@ -55,6 +55,7 @@ public class Percolation {
         if (N == 1) {
             weightedGrid.union(xyTo1D(row, col), N * N);
             weightedGrid.union(xyTo1D(row, col), N * N + 1);
+            backWash.union(xyTo1D(row, col), N * N);
         }
         if (outOfBounds(neighborRow, neighborCol)) {
             return;
