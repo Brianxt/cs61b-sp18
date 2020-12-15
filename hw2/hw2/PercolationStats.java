@@ -6,7 +6,7 @@ import edu.princeton.cs.introcs.StdStats;
 public class PercolationStats {
     private int N;
     private int T;
-    private Percolation p;
+    private Percolation[] p;
     private int[] num;
     //private boolean flag = true;
 
@@ -16,14 +16,14 @@ public class PercolationStats {
         }
         this.N = N;
         this.T = T;
-        this.p = pf.make(N);
         num = new int[T];
         for (int i = T; i > 0; i--) {
-            while (!p.percolates()) {
+            p[T - i] = pf.make(N);
+            while (!p[T - i].percolates()) {
                 int row = StdRandom.uniform(0, N);
                 int col = StdRandom.uniform(0, N);
-                if (!p.isOpen(row, col)) {
-                    p.open(row, col);
+                if (!p[T - i].isOpen(row, col)) {
+                    p[T - i].open(row, col);
                     num[T - i] = num[T - i] + 1;
                 }
             }

@@ -52,6 +52,10 @@ public class Percolation {
     }
 
     private void unionNeighborhood(int row, int col, int neighborRow, int neighborCol) {
+        if (N == 1) {
+            weightedGrid.union(xyTo1D(row, col), N * N);
+            weightedGrid.union(xyTo1D(row, col), N * N + 1);
+        }
         if (outOfBounds(neighborRow, neighborCol)) {
             return;
         }
@@ -89,6 +93,9 @@ public class Percolation {
     }
 
     public static void main(String[] args) {
+        //Percolation p = new Percolation(1);
+        //p.open(0,0);
+        //System.out.println(p.percolates());
        /** Percolation p = new Percolation(4);
         System.out.println(p.percolates());
         p.open(1, 1);
