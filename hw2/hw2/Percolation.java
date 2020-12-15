@@ -7,7 +7,8 @@ public class Percolation {
     private boolean[] firstGrid;
     private WeightedQuickUnionUF weightedGrid;
     private WeightedQuickUnionUF backWash;
-    boolean percolated = false;
+    private boolean percolated = false;
+    private int opensites = 0;
 
     public Percolation(int N) {
         if (N <= 0) {
@@ -32,6 +33,7 @@ public class Percolation {
         }
         if (!firstGrid[xyTo1D(row, col)]) {
             firstGrid[xyTo1D(row, col)] = true;
+            opensites += opensites;
             unionNeighborhood(row, col, row - 1, col);
             unionNeighborhood(row, col, row + 1, col);
             unionNeighborhood(row, col, row, col - 1);
@@ -59,7 +61,8 @@ public class Percolation {
         } else if ((row == N - 1) && (!weightedGrid.connected(xyTo1D(row, col), N * N + 1))) {
             weightedGrid.union(xyTo1D(row, col), N * N + 1);
         }
-        if (firstGrid[xyTo1D(neighborRow, neighborCol)] && !weightedGrid.connected(xyTo1D(row, col), xyTo1D(neighborRow, neighborCol))) {
+        if (firstGrid[xyTo1D(neighborRow, neighborCol)]
+                && !weightedGrid.connected(xyTo1D(row, col), xyTo1D(neighborRow, neighborCol))) {
             weightedGrid.union(xyTo1D(row, col), xyTo1D(neighborRow, neighborCol));
             backWash.union(xyTo1D(row, col), xyTo1D(neighborRow, neighborCol));
         }
@@ -75,6 +78,10 @@ public class Percolation {
             return true;
         }
         return false;
+    }
+
+    public int numberOfOpenSites() {
+        return opensites;
     }
 
     public boolean percolates() {
