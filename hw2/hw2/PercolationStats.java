@@ -24,7 +24,7 @@ public class PercolationStats {
                 int col = StdRandom.uniform(0, N);
                 if (!p.isOpen(row, col)) {
                     p.open(row, col);
-                    num[i] += num[i];
+                    num[T - i] = num[T - i] + 1;
                 }
             }
         }
