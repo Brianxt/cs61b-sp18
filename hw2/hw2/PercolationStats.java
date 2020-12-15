@@ -7,7 +7,8 @@ public class PercolationStats {
     private int N;
     private int T;
     private Percolation[] p;
-    private int[] num;
+    private double[] num;
+    private double[] x;
     //private boolean flag = true;
 
     public PercolationStats(int N, int T, PercolationFactory pf) {
@@ -16,7 +17,8 @@ public class PercolationStats {
         }
         this.N = N;
         this.T = T;
-        num = new int[T];
+        num = new double[T];
+        x = new double[T];
         p = new Percolation[T];
         for (int i = T; i > 0; i--) {
             p[T - i] = pf.make(N);
@@ -29,14 +31,17 @@ public class PercolationStats {
                 }
             }
         }
+        for (int i = 0; i < num.length; i++) {
+            x[i] = num[i] / (N * N);
+        }
     }
 
     public double mean() {
-        return StdStats.mean(num);
+        return StdStats.mean(x);
     }
 
     public double stddev() {
-        return StdStats.stddev(num);
+        return StdStats.stddev(x);
     }
 
     public double confidenceLow() {
