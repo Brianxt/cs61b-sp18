@@ -198,8 +198,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         for (int i = 0; i < contents.length; i++) {
             if (contents[i].myItem.equals(item)) {
                 contents[i].myPriority = priority;
-                swim(i);
                 sink(i);
+                swim(i);
+                break;
             }
         }
     }
