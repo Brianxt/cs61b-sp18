@@ -104,12 +104,16 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
         //boolean flag = false;
-        int pIndex = parentIndex(index);
-        if (pIndex == 0 || min(index, pIndex) == pIndex) {
+        //int pIndex = parentIndex(index);
+        /**if (pIndex == 0 || min(index, pIndex) == pIndex) {
             return;
         } else {
             swap(index, pIndex);
             swim(pIndex);
+        }*/
+        while (index > 1 && min(index, parentIndex(index)) == index) {
+            swap(index, parentIndex(index));
+            index = parentIndex(index);
         }
     }
 
@@ -119,7 +123,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     private void sink(int index) {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
-        int cLeftIndex = leftIndex(index);
+        /**int cLeftIndex = leftIndex(index);
         //validateSinkSwimArg(cLeftIndex);
         int cRightIndex = rightIndex(index);
         //validateSinkSwimArg(cRightIndex);
@@ -129,6 +133,28 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         } else {
             swap(index, sIndex);
             sink(sIndex);
+        }*/
+        int leftIndex = leftIndex(index);
+        boolean hasLeft = leftIndex <= size;
+        if (!hasLeft) { // Have sank down to the bottom
+            return;
+        }
+        int vsLeft = min(index, leftIndex);
+        int rightIndex = rightIndex(index);
+        boolean hasRight = rightIndex <= size;
+        if (vsLeft == leftIndex) {
+            if (hasRight && min(leftIndex, rightIndex) == rightIndex) {
+                swap(index, rightIndex);
+                sink(rightIndex);
+            } else {
+                swap(index, leftIndex);
+                sink(leftIndex);
+            }
+        }
+        if (hasRight && min(index, rightIndex) == rightIndex) {
+            // There is no case when `leftVsRight == leftIndex
+            swap(index, rightIndex);
+            sink(rightIndex);
         }
     }
 
@@ -172,7 +198,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         swap(1, size);
         contents[size] = null;
         size = size - 1;
-        sink(1);
+        if (size > 0) {
+            sink(1);
+        }
         return s;
     }
 
@@ -197,10 +225,14 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     public void changePriority(T item, double priority) {
         for (int i = 0; i < contents.length; i++) {
             if (contents[i].myItem.equals(item)) {
+                double prevPriority = contents[i].myPriority;
                 contents[i].myPriority = priority;
-                sink(i);
-                swim(i);
-                break;
+                if (prevPriority > priority) {
+                    swim(i);
+                } else if (prevPriority < priority) {
+                    sink(i);
+                }
+                return;
             }
         }
     }
